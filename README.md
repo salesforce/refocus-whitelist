@@ -38,7 +38,7 @@ you fix the errors.
 ### Refocus API, Real-Time and UI Applications
 
 In each of your Refocus applications, you must set environment variable
-`IP_WHITELIST_APPLICATION` to the base URL of this application.
+`IP_WHITELIST_SERVICE` to the base URL of this application.
 
 ## API
 
