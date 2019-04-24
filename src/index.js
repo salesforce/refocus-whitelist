@@ -9,6 +9,7 @@ const whitelistUtils = require('./whitelistUtils');
 const expressUtils = require('./expressUtils');
 const port = process.env.PORT || 3000;
 const listening = `Listening on port ${port}`;
+const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
 let whitelist;
 
@@ -26,5 +27,5 @@ try {
   whitelist = []; // allow nothing
 }
 
-const app = expressUtils.init(whitelist);
+const app = expressUtils.init(whitelist, API_CACHE_DURATION);
 app.listen(port, () => console.log(listening));
