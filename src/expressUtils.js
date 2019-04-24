@@ -7,7 +7,6 @@
  */
 const debug = require('debug')('refocus-whitelist:expressUtils');
 const express = require('express');
-const apiCache = require('apicache').middleware;
 const whitelistUtils = require('./whitelistUtils');
 const common = require('./common');
 const verifyAddressRoute = '/v1/verify/:address';
@@ -64,8 +63,7 @@ const errorHandler = (err, req, res, next) => {
 function init(w) {
   whitelist = w;
   const app = express();
-  app.get(verifyAddressRoute, apiCache('5 minutes'), preprocess, process,
-    finish, errorHandler);
+  app.get(verifyAddressRoute, preprocess, process, finish, errorHandler);
   return app;
 } // init
 
