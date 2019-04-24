@@ -37,6 +37,15 @@ If your `IP_WHITELIST` has any errors or there are any invalid IPv4 addresses,
 it refuses requests from all IP addresses to your Refocus applications until
 you fix the errors.  
 
+### API Cache
+
+Set environment variable `API_CACHE_DURATION` if you want to enable API
+caching. The value should be a string with a numeric value and unit, e.g.
+`30 seconds` or `5 minutes` or `1 hour`. 
+
+Note that this caches the response in memory so restarting the application will
+reset the cache. 
+
 ### Refocus API, Real-Time and UI Applications
 
 In each of your Refocus applications, you must set environment variable
