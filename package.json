@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/.",
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report none --print none --include-pid -- -R dot --recursive"
+    "test": "NODE_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha --report none --print none --include-pid -- -R dot --recursive"
   },
   "repository": {
     "type": "git",
@@ -17,11 +17,12 @@
     "apicache": "^1.4.0",
     "debug": "^4.1.1",
     "express": "^4.16.4",
-    "ip-regex": "^4.0.0"
+    "ip-regex": "^4.0.0",
+    "jscs": "^3.0.7"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "istanbul": "^0.4.5",
-    "mocha": "^6.1.3"
+    "mocha": "^6.1.4"
   }
 }
