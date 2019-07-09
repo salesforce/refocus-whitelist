@@ -7,18 +7,22 @@
  */
 
 const KafkaProducer = require('no-kafka');
-const config = require('../../src/config')();
+const config = require('../src/config').getConfig();
 
 let producer;
-const initProducer = () => {
-  producer = new KafkaProducer.Producer({
-    connectionString: config.connectionString,
-    ssl: {
-      cert: config.sslCert,
-      key: config.sslKey,
-    },
-  });
-  producer.init();
+const initProducer = (errorCallBack) => {
+  try {
+    producer = new KafkaProducer.Producer({
+      connectionString: config.connectionString,
+      ssl: {
+        cert: config.sslCert,
+        key: config.sslKey,
+      },
+    });
+    producer.init();
+  } catch (err) {
+    errorCallBack();
+  }
 };
 
 const logFunc = {
@@ -28,7 +32,7 @@ const logFunc = {
 };
 
 const writeLocalLog = (logMessage) => {
-  logFunc[logMessage.key](logMessage.value);
+  logFunc[logMessage.message.key](logMessage.message.value);
 };
 
 const logType = {
@@ -37,7 +41,7 @@ const logType = {
   WARN: 'warn',
 };
 
-const writeLog = async (value, key = logType.INFO, topic = 'refocus-whitelist') => {
+const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist') => {
   const logMessage = {
     topic,
     partition: 0,
@@ -47,12 +51,11 @@ const writeLog = async (value, key = logType.INFO, topic = 'refocus-whitelist') 
     },
   };
   if (process.env.KAFKA_LOGGING) {
-    try {
-      await producer.send(logMessage);
-    } catch (err) {
-      console.error(`Sending the log message to Kafka cluster failed, writing locally, error: ${err}`);
+    producer.send(logMessage).catch(() => {
+      console.error('Sending the log message to Kafka cluster failed, ' +
+        `writing locally, error: ${err}`);
       writeLocalLog(logMessage);
-    }
+    });
   } else {
     writeLocalLog(logMessage);
   }
@@ -62,4 +65,7 @@ module.exports = {
   initProducer,
   writeLog,
   logType,
+  testExports: {
+    writeLocalLog,
+  },
 };

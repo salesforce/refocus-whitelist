@@ -6,9 +6,36 @@
  * https://opensource.org/licenses/BSD-3-Clause
  */
 const expect = require('chai').expect;
-const common = require('../src/common');
+const { initProducer, writeLog, logType } = require('../src/logger');
+const KafkaProducer = require('no-kafka');
+const sinon = require('sinon');
 
 describe('test/logger.js > ', () => {
-  it('', () => {      
+  it('Happy path:call producer with the right args, call the init function and send', () => {
+    process.env.KAFKA_LOGGING = 'true';
+    const sendMock = sinon.stub().returns((new Promise(() => {})));
+    const initMock = sinon.fake();
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+      init: () => initMock(),
+      send: () => sendMock(),
+    });
+    initProducer();
+    sinon.assert.calledWith(producerMock, {
+      connectionString: 'test-url',
+      ssl: {
+        cert: 'test-cert',
+        key: 'test-key',
+      },
+    });
+    sinon.assert.calledOnce(initMock);
+    writeLog('test-value', logType.INFO, 'test-topic');
+    sinon.assert.calledOnce(sendMock);
+  });
+
+  it('Calls the write local log if process.env.KAFKA_LOGGING KAFKA_LOGGING not defined', () => {
+    const initMock = sinon.fake();
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+      init: () => initMock(),
+    });
   });
 });
