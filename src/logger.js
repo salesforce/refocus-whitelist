@@ -42,7 +42,7 @@ const logType = {
   WARN: 'warn',
 };
 
-const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist') => {
+const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist', callback) => {
   const logMessage = {
     topic,
     partition: 0,
@@ -52,14 +52,19 @@ const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist') => {
     },
   };
   if (configFunctions.kafkaLogging) {
-    console.warn('Reaching here');
-    producer.send(logMessage).catch(() => {
-      console.error('Sending the log message to Kafka cluster failed, ' +
-        `writing locally, error: ${err}`);
-      writeLocalLog(logMessage);
-    });
+    try {
+      producer.send(logMessage).catch(err => {
+        console.error('Sending the log message to Kafka cluster failed, ' +
+          `writing locally, error: ${err}`);
+        writeLocalLog(logMessage);
+        callback();
+      });
+    } catch (err) {
+
+    }
   } else {
     writeLocalLog(logMessage);
+    callback();
   }
 };
 

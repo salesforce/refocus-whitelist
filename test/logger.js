@@ -12,14 +12,15 @@ const sinon = require('sinon');
 const config = require('../src/config');
 
 describe('test/logger.js > ', () => {
-  let producerMock;
+
   it('Happy path:call producer with the right args, call the init function and send', () => {
     config.kafkaLogging = 'true';
+    const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns((new Promise(() => { })));
     const initMock = sinon.fake();
-    producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
-      send: () => sendMock(),
+      send: (message) => sendMock(),
     });
     initProducer();
     sinon.assert.calledWith(producerMock, {
@@ -30,19 +31,37 @@ describe('test/logger.js > ', () => {
       },
     });
     sinon.assert.calledOnce(initMock);
-    writeLog('test-value', logType.INFO, 'test-topic');
-    sinon.assert.calledOnce(sendMock);
+    writeLog('test-value', logType.INFO, 'test-topic', localWriteCallback);
+    sinon.assert.calledWith(sendMock);
+    expect(localWriteCallback.calledOnce).to.be.false;
+    producerMock.restore();
   });
 
   it('Calls the write local log if process.env.KAFKA_LOGGING KAFKA_LOGGING not defined', () => {
     config.kafkaLogging = null;
-    console.warn(config.kafkaLogging);
     const initMock = sinon.fake();
-    producerMock.restore();
-    sinon.stub(KafkaProducer, 'Producer').returns({
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
-      send: () => {},
+      send: () => { },
     });
-    writeLog('test-value', logType.INFO, 'test-topic');
+    const localWriteCallback = sinon.spy();
+    writeLog('test-value', logType.INFO, 'test-topic', localWriteCallback);
+    expect(localWriteCallback.calledOnce).to.be.true;
+    producerMock.restore();
+  });
+
+  it('Calls the write local log if sends throws error', () => {
+    config.kafkaLogging = 'true';
+    const initMock = sinon.fake();
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+      init: () => initMock(),
+      send: () => {
+        throw new Error();
+      },
+    });
+    const localWriteCallback = sinon.spy();
+    writeLog('test-value', logType.INFO, 'test-topic', localWriteCallback);
+    expect(localWriteCallback.calledOnce).to.be.true;
+    producerMock.restore();
   });
 });
