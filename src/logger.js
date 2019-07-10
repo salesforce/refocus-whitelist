@@ -62,6 +62,7 @@ const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
   };
   if (configFunctions.kafkaLogging) {
     producer.send(logMessage).catch(err => {
+      console.warn('CALLLL');
       callback('Sending the log message to Kafka cluster failed, ' +
       `writing locally, error: ${err}`);
       writeLocalLog(logMessage);

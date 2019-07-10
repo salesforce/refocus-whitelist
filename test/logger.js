@@ -5,7 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or
  * https://opensource.org/licenses/BSD-3-Clause
  */
-const expect = require('chai').expect;
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+const expect = chai.expect;
+
 const { initProducer, writeLog } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
@@ -64,19 +68,20 @@ describe('test/logger.js > ', () => {
     KafkaProducer.Producer.restore();
   });
 
-  it('Calls the write local log if sends throws error',  () => {
+  it('Send throws an error',  () => {
     config.kafkaLogging = 'true';
     const initMock = sinon.fake();
+    const sendPromise = new Promise(() => {
+      throw new Error();
+    });
     const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
-      send: (message) => new Promise(() => {
-        throw new Error();
-      }),
+      send: (message) => sendPromise,
     });
     const localWriteCallback = sinon.spy();
     initProducer();
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
-    expect(localWriteCallback.calledOnce).to.be.true;
+    expect(sendPromise).to.be.eventually.rejected;
     KafkaProducer.Producer.restore();
   });
 });
