@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/BSD-3-Clause
  */
 const expect = require('chai').expect;
-const { initProducer, writeLog, logType } = require('../src/logger');
+const { initProducer, writeLog } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
 const config = require('../src/config');
@@ -31,7 +31,7 @@ describe('test/logger.js > ', () => {
       },
     });
     sinon.assert.calledOnce(initMock);
-    writeLog('test-value', logType.INFO, 'test-topic', localWriteCallback);
+    writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     sinon.assert.calledWith(sendMock);
     expect(localWriteCallback.calledOnce).to.be.false;
     producerMock.restore();
@@ -45,7 +45,7 @@ describe('test/logger.js > ', () => {
       send: () => { },
     });
     const localWriteCallback = sinon.spy();
-    writeLog('test-value', logType.INFO, 'test-topic', localWriteCallback);
+    writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     expect(localWriteCallback.calledOnce).to.be.true;
     producerMock.restore();
   });
@@ -60,7 +60,7 @@ describe('test/logger.js > ', () => {
       },
     });
     const localWriteCallback = sinon.spy();
-    writeLog('test-value', logType.INFO, 'test-topic', localWriteCallback);
+    writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     expect(localWriteCallback.calledOnce).to.be.true;
     producerMock.restore();
   });

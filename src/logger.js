@@ -30,19 +30,23 @@ const logFunc = {
   info: console.log,
   warn: console.warn,
   error: console.error,
+  trace: console.log,
+  debug: console.log,
 };
 
 const writeLocalLog = (logMessage) => {
   logFunc[logMessage.message.key](logMessage.message.value);
 };
 
-const logType = {
-  ERR: 'error',
-  INFO: 'info',
-  WARN: 'warn',
+const logger = {
+  error: (value) => writeLog(value, 'error'),
+  warn: (value) => writeLog(value, 'warn'),
+  info: (value) => writeLog(value, 'info'),
+  debug: (value) => writeLog(value, 'debug'),
+  silly: (value) => writeLog(value, 'trace'),
 };
 
-const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist',
+const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
                   callback = console.error) => {
   const logMessage = {
     topic,
@@ -67,8 +71,5 @@ const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist',
 module.exports = {
   initProducer,
   writeLog,
-  logType,
-  testExports: {
-    writeLocalLog,
-  },
+  logger,
 };
