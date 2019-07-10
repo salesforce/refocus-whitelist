@@ -13,6 +13,19 @@ const config = require('../src/config');
 
 describe('test/logger.js > ', () => {
 
+  it('init producer fails, ', () => {
+    config.kafkaLogging = 'true';
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+      init: () => {
+        throw new Error();
+      },
+    });
+    const errorCallback = sinon.spy();
+    initProducer(errorCallback);
+    expect(errorCallback.calledOnce).to.be.true;
+    KafkaProducer.Producer.restore();
+  });
+
   it('Happy path:call producer with the right args, call the init function and send', () => {
     config.kafkaLogging = 'true';
     const localWriteCallback = sinon.spy();
@@ -34,7 +47,7 @@ describe('test/logger.js > ', () => {
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     sinon.assert.calledWith(sendMock);
     expect(localWriteCallback.calledOnce).to.be.false;
-    producerMock.restore();
+    KafkaProducer.Producer.restore();
   });
 
   it('Calls the write local log if process.env.KAFKA_LOGGING KAFKA_LOGGING not defined', () => {
@@ -47,7 +60,7 @@ describe('test/logger.js > ', () => {
     const localWriteCallback = sinon.spy();
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     expect(localWriteCallback.calledOnce).to.be.true;
-    producerMock.restore();
+    KafkaProducer.Producer.restore();
   });
 
   it('Calls the write local log if sends throws error', () => {
@@ -55,13 +68,13 @@ describe('test/logger.js > ', () => {
     const initMock = sinon.fake();
     const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
-      send: () => {
+      send: () => (new Promise((resolve, reject) => {
         throw new Error();
-      },
+      })),
     });
     const localWriteCallback = sinon.spy();
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     expect(localWriteCallback.calledOnce).to.be.true;
-    producerMock.restore();
+    KafkaProducer.Producer.restore();
   });
 });

@@ -63,8 +63,9 @@ const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
       writeLocalLog(logMessage);
     });
   } else {
+    callback('Kafka Logging has been turned off, check value of process.env.KAFKA_LOGGING' +
+      'writing locally');
     writeLocalLog(logMessage);
-    callback('Kafka Logging has been turned off, check value of process.env.KAFKA_LOGGING');
   }
 };
 

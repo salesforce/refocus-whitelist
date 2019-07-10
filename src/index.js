@@ -23,7 +23,7 @@ try {
   }
 } catch (err) {
   logger.error(`Error: ${err.message}`, logType.ERR);
-  writeLog('Returning { allow: false } for all IP addresses until you ' +
+  logger.info('Returning { allow: false } for all IP addresses until you ' +
     'fix your IP_WHITELIST environment variable.');
   whitelist = []; // allow nothing
 }
