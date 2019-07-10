@@ -7,7 +7,8 @@
  */
 
 const KafkaProducer = require('no-kafka');
-const config = require('../src/config').getConfig();
+const configFunctions = require('../src/config');
+const config = configFunctions.getConfig();
 
 let producer;
 const initProducer = (errorCallBack) => {
@@ -50,7 +51,8 @@ const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist') => {
       value: JSON.stringify(value),
     },
   };
-  if (process.env.KAFKA_LOGGING) {
+  if (configFunctions.kafkaLogging) {
+    console.warn('Reaching here');
     producer.send(logMessage).catch(() => {
       console.error('Sending the log message to Kafka cluster failed, ' +
         `writing locally, error: ${err}`);

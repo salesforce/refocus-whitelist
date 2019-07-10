@@ -9,13 +9,15 @@ const expect = require('chai').expect;
 const { initProducer, writeLog, logType } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
+const config = require('../src/config');
 
 describe('test/logger.js > ', () => {
+  let producerMock;
   it('Happy path:call producer with the right args, call the init function and send', () => {
-    process.env.KAFKA_LOGGING = 'true';
-    const sendMock = sinon.stub().returns((new Promise(() => {})));
+    config.kafkaLogging = 'true';
+    const sendMock = sinon.stub().returns((new Promise(() => { })));
     const initMock = sinon.fake();
-    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+    producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
       send: () => sendMock(),
     });
@@ -33,9 +35,14 @@ describe('test/logger.js > ', () => {
   });
 
   it('Calls the write local log if process.env.KAFKA_LOGGING KAFKA_LOGGING not defined', () => {
+    config.kafkaLogging = null;
+    console.warn(config.kafkaLogging);
     const initMock = sinon.fake();
-    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+    producerMock.restore();
+    sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
+      send: () => {},
     });
+    writeLog('test-value', logType.INFO, 'test-topic');
   });
 });

@@ -33,6 +33,8 @@ module.exports = {
     return config[environmentName] ? config[environmentName] : config.test;
   },
 
+  kafkaLogging: process.env.KAFKA_LOGGING,
+
   testExport: {
     herokuConfig,
     testConfig,
