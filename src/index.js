@@ -8,30 +8,25 @@
 const whitelistUtils = require('./whitelistUtils');
 const expressUtils = require('./expressUtils');
 const port = process.env.PORT || 3000;
-const { logType, sendLog, initProducer } = require('./logger');
+const { logType, writeLog, initProducer } = require('./logger');
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
 let whitelist;
-try {
-  initProducer();
-} catch (err) {
-  console.error(`Failed to initialized producer error: ${err}`);
-}
-
+initProducer();
 try {
   whitelist = whitelistUtils.loadWhitelist();
   if (!whitelist) { // allow everything
-    sendLog('Warning: No IP_WHITELIST or empty IP_WHITELIST.', logType.INFO);
-    sendLog('Returning { allow: true } for all IP addresses until you ' +
+    writeLog('Warning: No IP_WHITELIST or empty IP_WHITELIST.', logType.INFO);
+    writeLog('Returning { allow: true } for all IP addresses until you ' +
       'configure your IP_WHITELIST environment variable.', logType.INFO);
   }
 } catch (err) {
-  sendLog(`Error: ${err.message}`, logType.ERR);
-  sendLog('Returning { allow: false } for all IP addresses until you ' +
+  writeLog(`Error: ${err.message}`, logType.ERR);
+  writeLog('Returning { allow: false } for all IP addresses until you ' +
     'fix your IP_WHITELIST environment variable.', logType.INFO);
   whitelist = []; // allow nothing
 }
 
 const app = expressUtils.init(whitelist, API_CACHE_DURATION);
-app.listen(port, () => sendLog('log', listening));
+app.listen(port, () => writeLog('log', listening));

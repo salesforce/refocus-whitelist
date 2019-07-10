@@ -11,7 +11,7 @@ const configFunctions = require('../src/config');
 const config = configFunctions.getConfig();
 
 let producer;
-const initProducer = (errorCallBack) => {
+const initProducer = (errorCallBack = console.error) => {
   try {
     producer = new KafkaProducer.Producer({
       connectionString: config.connectionString,
@@ -22,7 +22,7 @@ const initProducer = (errorCallBack) => {
     });
     producer.init();
   } catch (err) {
-    errorCallBack();
+    errorCallBack(`Failed to initialized producer error: ${err}`);
   }
 };
 
@@ -42,7 +42,8 @@ const logType = {
   WARN: 'warn',
 };
 
-const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist', callback) => {
+const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist',
+                  callback = console.error) => {
   const logMessage = {
     topic,
     partition: 0,
@@ -52,19 +53,14 @@ const writeLog = (value, key = logType.INFO, topic = 'refocus-whitelist', callba
     },
   };
   if (configFunctions.kafkaLogging) {
-    try {
-      producer.send(logMessage).catch(err => {
-        console.error('Sending the log message to Kafka cluster failed, ' +
-          `writing locally, error: ${err}`);
-        writeLocalLog(logMessage);
-        callback();
-      });
-    } catch (err) {
-
-    }
+    producer.send(logMessage).catch(err => {
+      callback('Sending the log message to Kafka cluster failed, ' +
+      `writing locally, error: ${err}`);
+      writeLocalLog(logMessage);
+    });
   } else {
     writeLocalLog(logMessage);
-    callback();
+    callback('Kafka Logging has been turned off, check value of process.env.KAFKA_LOGGING');
   }
 };
 
