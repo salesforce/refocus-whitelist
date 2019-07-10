@@ -57,6 +57,7 @@ describe('test/logger.js > ', () => {
       init: () => initMock(),
       send: () => { },
     });
+    initProducer();
     const localWriteCallback = sinon.spy();
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     expect(localWriteCallback.calledOnce).to.be.true;
@@ -68,7 +69,7 @@ describe('test/logger.js > ', () => {
     const initMock = sinon.fake();
     const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
-      send: () => (new Promise((resolve, reject) => {
+      send: (message) => (new Promise(() => {
         throw new Error();
       })),
     });

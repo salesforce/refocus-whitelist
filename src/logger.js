@@ -48,15 +48,20 @@ const logger = {
 
 const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
                   callback = console.error) => {
+  const messageValue = {
+    sendTimeStamp: new Date(),
+    value,
+  };
   const logMessage = {
     topic,
     partition: 0,
     message: {
       key,
-      value: JSON.stringify(value),
+      value: JSON.stringify(messageValue),
     },
   };
   if (configFunctions.kafkaLogging) {
+    console.warn(producer.send(logMessage));
     producer.send(logMessage).catch(err => {
       callback('Sending the log message to Kafka cluster failed, ' +
       `writing locally, error: ${err}`);
