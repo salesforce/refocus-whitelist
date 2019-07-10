@@ -22,7 +22,7 @@ try {
       'configure your IP_WHITELIST environment variable.');
   }
 } catch (err) {
-  logger.error(`Error: ${err.message}`, logType.ERR);
+  logger.error(`Error: ${err.message}`);
   logger.info('Returning { allow: false } for all IP addresses until you ' +
     'fix your IP_WHITELIST environment variable.');
   whitelist = []; // allow nothing
