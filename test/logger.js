@@ -64,16 +64,17 @@ describe('test/logger.js > ', () => {
     KafkaProducer.Producer.restore();
   });
 
-  it('Calls the write local log if sends throws error', () => {
+  it('Calls the write local log if sends throws error',  () => {
     config.kafkaLogging = 'true';
     const initMock = sinon.fake();
     const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
       init: () => initMock(),
-      send: (message) => (new Promise(() => {
+      send: (message) => new Promise(() => {
         throw new Error();
-      })),
+      }),
     });
     const localWriteCallback = sinon.spy();
+    initProducer();
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     expect(localWriteCallback.calledOnce).to.be.true;
     KafkaProducer.Producer.restore();
