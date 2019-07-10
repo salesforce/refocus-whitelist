@@ -9,7 +9,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-
 const { initProducer, writeLog } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
@@ -49,7 +48,7 @@ describe('test/logger.js > ', () => {
     });
     sinon.assert.calledOnce(initMock);
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
-    sinon.assert.calledWith(sendMock);
+    sinon.assert.calledOnce(sendMock);
     expect(localWriteCallback.calledOnce).to.be.false;
     KafkaProducer.Producer.restore();
   });
