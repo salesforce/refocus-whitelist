@@ -4,8 +4,9 @@
   "description": "Utility application for Refocus's API, Real-Time and UI applications to verify that all inbound requests originate from whitelisted IP addresses.",
   "main": "src/index.js",
   "scripts": {
+    "lint": "./node_modules/jscs/bin/jscs src test",
     "start": "node src/.",
-    "test": "istanbul cover ./node_modules/mocha/bin/_mocha --report none --print none --include-pid -- -R dot --recursive"
+    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha --report none --print none --include-pid -- -R dot --recursive"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "istanbul": "^0.4.5",
+    "jscs": "^3.0.7",
     "mocha": "^6.1.3"
   }
 }

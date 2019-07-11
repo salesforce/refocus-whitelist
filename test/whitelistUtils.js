@@ -53,14 +53,14 @@ describe('test/whitelistUtils.js > ', () => {
         [67305985, 67305985],
       ];
       expect(loadWhitelist()).to.deep.equal(expected);
-    })
+    });
   }); // loadWhitelist
 
   describe('isWhitelisted > ', () => {
     const isWhitelisted = whitelistUtils.isWhitelisted;
 
     // 255.0.0.0 - 255.255.255.255, 123.0.0.0 - 124.0.0.100
-    const w = [ [ 2063597568, 2080374884 ], [ 4278190080, 4294967295 ] ];
+    const w = [[2063597568, 2080374884], [4278190080, 4294967295]];
 
     it('ok', () => {
       expect(isWhitelisted('123.0.0.100', w)).to.be.true;
@@ -122,7 +122,7 @@ describe('test/whitelistUtils.js > ', () => {
         expect(() => toNumericRange('0.0.0.0-0.0.0.1-'))
           .to.throw(Error)
           .to.have.property('message', 'Invalid Whitelist: "0.0.0.0-0.0.0.1-" ' +
-          'must only contain one "-" delimiter.');
+            'must only contain one "-" delimiter.');
         expect(() => toNumericRange('0.0.0.0-0.0.0.1-0.0.0.2')).to.throw(Error);
       });
 
@@ -136,7 +136,7 @@ describe('test/whitelistUtils.js > ', () => {
           .to.deep.equal([16909060, 16909060]);
         expect(() => toNumericRange('0.0.0.2-0.0.0.1')).to.throw(Error)
           .to.have.property('message', 'Invalid Whitelist: ' +
-          '"0.0.0.1" must be greater than or equal to "0.0.0.2".');
+            '"0.0.0.1" must be greater than or equal to "0.0.0.2".');
       });
     }); // toNumericRange
   }); // _helpers

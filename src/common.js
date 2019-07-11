@@ -9,7 +9,7 @@ const trace = require('debug')('refocus-whitelist-trace:common');
 const ipRegex = require('ip-regex');
 
 function isIpv4(x) {
-  const retval = ipRegex.v4({exact: true, includeBoundaries: true}).test(x);
+  const retval = ipRegex.v4({ exact: true, includeBoundaries: true }).test(x);
   trace(`isIpv4(x="%s") ==> %s`, x, retval);
   return retval;
 } // isIpv4
