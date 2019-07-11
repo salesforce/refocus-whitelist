@@ -61,19 +61,14 @@ const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
     },
   };
   if (configFunctions.kafkaLogging) {
-    producer.send(logMessage).then(() => {
-      if (configFunctions.localLogging) {
-        callback('KAFKA_LOGGING and LOCAL_LOGGING are both on');
-        writeLocalLog(logMessage);
-      }
-    }).catch(err => {
+    producer.send(logMessage).catch(err => {
       callback('Sending the log message to Kafka cluster failed, ' +
       `writing locally, error: ${err}`);
       writeLocalLog(logMessage);
     });
-  } else {
-    callback('Kafka Logging has been turned off, check value of process.env.KAFKA_LOGGING' +
-      'writing locally');
+  }
+  if (configFunctions.localLogging) {
+    callback('Local logging is turned on');
     writeLocalLog(logMessage);
   }
 };

@@ -31,6 +31,32 @@ describe('test/logger.js > ', () => {
 
   it('Happy path:call producer with the right args, call the init function and send', () => {
     config.kafkaLogging = 'true';
+    config.localLogging = 'true';
+    const localWriteCallback = sinon.spy();
+    const sendMock = sinon.stub().returns((new Promise(() => { })));
+    const initMock = sinon.fake();
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+      init: () => initMock(),
+      send: (message) => sendMock(),
+    });
+    initProducer();
+    sinon.assert.calledWith(producerMock, {
+      connectionString: 'test-url',
+      ssl: {
+        cert: 'test-cert',
+        key: 'test-key',
+      },
+    });
+    sinon.assert.calledOnce(initMock);
+    writeLog('test-value', 'info', 'test-topic', localWriteCallback);
+    sinon.assert.calledOnce(sendMock);
+    expect(localWriteCallback.calledOnce).to.be.true;
+    KafkaProducer.Producer.restore();
+  });
+
+  it('Happy path: local logging off', () => {
+    config.kafkaLogging = 'true';
+    config.localLogging = false;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns((new Promise(() => { })));
     const initMock = sinon.fake();
@@ -50,20 +76,6 @@ describe('test/logger.js > ', () => {
     writeLog('test-value', 'info', 'test-topic', localWriteCallback);
     sinon.assert.calledOnce(sendMock);
     expect(localWriteCallback.calledOnce).to.be.false;
-    KafkaProducer.Producer.restore();
-  });
-
-  it('Calls the write local log if process.env.KAFKA_LOGGING KAFKA_LOGGING not defined', () => {
-    config.kafkaLogging = null;
-    const initMock = sinon.fake();
-    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
-      init: () => initMock(),
-      send: () => { },
-    });
-    initProducer();
-    const localWriteCallback = sinon.spy();
-    writeLog('test-value', 'info', 'test-topic', localWriteCallback);
-    expect(localWriteCallback.calledOnce).to.be.true;
     KafkaProducer.Producer.restore();
   });
 
