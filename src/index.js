@@ -8,12 +8,12 @@
 const whitelistUtils = require('./whitelistUtils');
 const expressUtils = require('./expressUtils');
 const port = process.env.PORT || 3000;
-const { logger, initProducer } = require('./logger');
+const { logger, initKafkaLoggingProducer } = require('./logger');
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
 let whitelist;
-initProducer();
+initKafkaLoggingProducer();
 try {
   whitelist = whitelistUtils.loadWhitelist();
   if (!whitelist) { // allow everything

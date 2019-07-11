@@ -9,7 +9,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-const { initProducer, writeLog } = require('../src/logger');
+const { initKafkaLoggingProducer, writeLog } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
 const config = require('../src/config');
@@ -24,7 +24,7 @@ describe('test/logger.js > ', () => {
       },
     });
     const errorCallback = sinon.spy();
-    initProducer(errorCallback);
+    initKafkaLoggingProducer(errorCallback);
     expect(errorCallback.calledOnce).to.be.true;
     KafkaProducer.Producer.restore();
   });
@@ -39,7 +39,7 @@ describe('test/logger.js > ', () => {
       init: () => initMock(),
       send: (message) => sendMock(),
     });
-    initProducer();
+    initKafkaLoggingProducer();
     sinon.assert.calledWith(producerMock, {
       connectionString: 'test-url',
       ssl: {
@@ -64,7 +64,7 @@ describe('test/logger.js > ', () => {
       init: () => initMock(),
       send: (message) => sendMock(),
     });
-    initProducer();
+    initKafkaLoggingProducer();
     sinon.assert.calledWith(producerMock, {
       connectionString: 'test-url',
       ssl: {
@@ -89,9 +89,8 @@ describe('test/logger.js > ', () => {
       init: () => initMock(),
       send: (message) => sendPromise,
     });
-    const localWriteCallback = sinon.spy();
-    initProducer();
-    writeLog('test-value', 'info', 'test-topic', localWriteCallback);
+    initKafkaLoggingProducer();
+    writeLog('test-value', 'info', 'test-topic');
     expect(sendPromise).to.be.eventually.rejected;
     KafkaProducer.Producer.restore();
   });
