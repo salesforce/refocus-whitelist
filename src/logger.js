@@ -46,7 +46,7 @@ const logger = {
   silly: (value) => writeLog(value, 'trace'),
 };
 
-const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
+const writeLog = (value, key = 'info', topic = config.topic,
                   localLoggingCallBack = console.log) => {
   const messageValue = {
     sendTimeStamp: new Date(),
