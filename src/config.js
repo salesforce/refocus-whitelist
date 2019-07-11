@@ -33,9 +33,9 @@ module.exports = {
 
   kafkaLogging: process.env.KAFKA_LOGGING,
   
-  // This env variable, if set to true will write logs locally if kafkaLogging is on.
-  localLogging: process.env.LOCAL_LOGGING === 'false' ? false : 'true',
-  testExport: {
+  // Local logging will only be off if process.env.LOCAL_LOGGING is false, default true
+  localLogging: process.env.LOCAL_LOGGING ? !(process.env.LOCAL_LOGGING === 'false') : true,
+    testExport: {
     herokuConfig,
     testConfig,
   },
