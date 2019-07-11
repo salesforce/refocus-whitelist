@@ -47,7 +47,7 @@ const logger = {
 };
 
 const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
-                  callback = console.error) => {
+                  callback = console.warn) => {
   const messageValue = {
     sendTimeStamp: new Date(),
     value,
@@ -61,7 +61,12 @@ const writeLog = (value, key = 'info', topic = 'refocus-whitelist',
     },
   };
   if (configFunctions.kafkaLogging) {
-    producer.send(logMessage).catch(err => {
+    producer.send(logMessage).then(() => {
+      if (configFunctions.localLogging) {
+        callback('KAFKA_LOGGING and LOCAL_LOGGING are both on');
+        writeLocalLog(logMessage);
+      }
+    }).catch(err => {
       callback('Sending the log message to Kafka cluster failed, ' +
       `writing locally, error: ${err}`);
       writeLocalLog(logMessage);
