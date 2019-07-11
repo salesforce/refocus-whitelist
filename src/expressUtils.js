@@ -70,6 +70,7 @@ function init(w, apiCacheDuration) {
   } else {
     app.get(verifyAddressRoute, preprocess, process, finish, errorHandler);
   }
+
   return app;
 } // init
 
