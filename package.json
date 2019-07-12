@@ -26,7 +26,6 @@
     "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
     "jscs": "^3.0.7",
-    "sinon": "^7.3.2",
-    "chai-as-promised": "^7.1.1"
+    "sinon": "^7.3.2"
   }
 }
