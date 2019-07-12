@@ -12,21 +12,24 @@ const { logger, initKafkaLoggingProducer } = require('./logger');
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
-let whitelist;
-initKafkaLoggingProducer();
-try {
-  whitelist = whitelistUtils.loadWhitelist();
-  if (!whitelist) { // allow everything
-    logger.info('Warning: No IP_WHITELIST or empty IP_WHITELIST.');
-    logger.info('Returning { allow: true } for all IP addresses until you ' +
-      'configure your IP_WHITELIST environment variable.');
+const startApp = () => {
+  let whitelist;
+  try {
+    whitelist = whitelistUtils.loadWhitelist();
+    if (!whitelist) { // allow everything
+      logger.info('Warning: No IP_WHITELIST or empty IP_WHITELIST.');
+      logger.info('Returning { allow: true } for all IP addresses until you ' +
+        'configure your IP_WHITELIST environment variable.');
+    }
+  } catch (err) {
+    logger.error(`Error: ${err.message}`);
+    logger.info('Returning { allow: false } for all IP addresses until you ' +
+      'fix your IP_WHITELIST environment variable.');
+    whitelist = []; // allow nothing
   }
-} catch (err) {
-  logger.error(`Error: ${err.message}`);
-  logger.info('Returning { allow: false } for all IP addresses until you ' +
-    'fix your IP_WHITELIST environment variable.');
-  whitelist = []; // allow nothing
-}
 
-const app = expressUtils.init(whitelist, API_CACHE_DURATION);
-app.listen(port, () => logger.info(listening));
+  const app = expressUtils.init(whitelist, API_CACHE_DURATION);
+  app.listen(port, () => logger.info(listening));
+};
+
+initKafkaLoggingProducer().then(startApp);

@@ -30,7 +30,7 @@ const initKafkaLoggingProducer = (errorCallBack = console.error) => {
   } catch (err) {
     initSuccess = false;
     errorCallBack(`Failed to initialized Kafka producer for logging error: ${err}`);
-    return Promise.reject();
+    return Promise.resolve();
   }
 };
 
