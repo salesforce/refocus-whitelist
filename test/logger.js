@@ -29,7 +29,7 @@ describe('test/logger.js > ', () => {
     KafkaProducer.Producer.restore();
   });
 
-  it.only('Happy path:call producer with the right args, call the init function and send', () => {
+  it('Happy path:call producer with the right args, call the init function and send', () => {
     config.kafkaLogging = 'true';
     config.localLogging = true;
     const localWriteCallback = sinon.spy();
