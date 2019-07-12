@@ -67,6 +67,7 @@ const writeLog = (value, key = 'info', topic = config.topic,
       writeLocalLog(logMessage);
     });
   }
+
   if (configFunctions.localLogging) {
     localLoggingCallBack('Local logging is turned on');
     writeLocalLog(logMessage);
