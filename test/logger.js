@@ -118,8 +118,7 @@ describe('test/logger.js > ', () => {
     initKafkaLoggingProducer().then(() => {
       expect(initMock.calledOnce).to.be.true;
       writeLog('test-value', 'info', 'test-topic', localWriteCallback).then(() => {
-        expect(sendMock.calledOnce).to.be.true;
-        expect(localWriteCallback.calledOnce).to.be.true;
+        expect(sendMock.calledTwice).to.be.true;
       });
     });
     KafkaProducer.Producer.restore();

@@ -68,14 +68,11 @@ const writeLog = (value, key = 'info', topic = config.topic,
       value: JSON.stringify(messageValue),
     },
   };
-  console.log('Value of initSucces:' + initSuccess);
-  console.log('Value of configFunctions.kafkaLogging:' + configFunctions.kafkaLogging);
   let promise;
   if (configFunctions.kafkaLogging && initSuccess) {
     promise = producer.send(logMessage).catch(err => {
-      localLoggingCallBack('Sending the log message to Kafka cluster failed, ' +
-      `writing locally, error: ${err}`);
-      writeLocalLog(logMessage);
+      producer.send(logMessage); // retry again if failed
+      localLoggingCallBack(`Sending the log message to Kafka cluster failed, error: ${err}`);
     });
   }
 
