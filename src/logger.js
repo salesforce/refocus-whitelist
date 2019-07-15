@@ -58,7 +58,7 @@ const writeLog = (value, key = 'info', topic = config.topic, callback = console.
     partition: 0,
     message: {
       key,
-      value: JSON.stringify(messageValue),
+      value: messageValue,
     },
   };
   let promise;
