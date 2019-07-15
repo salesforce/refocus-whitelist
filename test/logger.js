@@ -13,21 +13,8 @@ const config = require('../src/config');
 
 describe('test/logger.js > ', () => {
 
-  it('init producer fails, ', () => {
-    config.kafkaLogging = 'true';
-    const initMock = sinon.stub().returns(Promise.resolve());
-    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
-      init: Promise.resolve(initMock()),
-    });
-    const errorCallback = sinon.spy();
-    initKafkaLoggingProducer(errorCallback).catch(() => {
-      expect(errorCallback.calledOnce).to.be.true;
-    });
-    KafkaProducer.Producer.restore();
-  });
-
   it('Happy path:call producer with the right args, call the init function and send', () => {
-    config.kafkaLogging = 'true';
+    config.kafkaLogging = true;
     config.localLogging = true;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
@@ -54,7 +41,7 @@ describe('test/logger.js > ', () => {
   });
 
   it('Happy path: local logging off', () => {
-    config.kafkaLogging = 'true';
+    config.kafkaLogging = true;
     config.localLogging = false;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
@@ -89,7 +76,7 @@ describe('test/logger.js > ', () => {
       init: () => Promise.resolve(initMock()),
       send: (message) => Promise.resolve(sendMock(message)),
     });
-    initKafkaLoggingProducer().then(() => {
+    initKafkaLoggingProducer().catch(() => {
       sinon.assert.calledWith(producerMock, {
         connectionString: 'test-url',
         ssl: {
@@ -106,7 +93,7 @@ describe('test/logger.js > ', () => {
   });
 
   it('Send throws an error', () => {
-    config.kafkaLogging = 'true';
+    config.kafkaLogging = true;
     config.localLogging = false;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.reject());

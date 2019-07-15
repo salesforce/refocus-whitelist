@@ -33,7 +33,7 @@ module.exports = {
     return config[environmentName] ? config[environmentName] : config.test;
   },
 
-  kafkaLogging: process.env.KAFKA_LOGGING,
+  kafkaLogging: process.env.KAFKA_LOGGING ? true : false,
 
   // Local logging will only be off if process.env.LOCAL_LOGGING is false, default true
   localLogging: process.env.LOCAL_LOGGING ? !(process.env.LOCAL_LOGGING === 'false') : true,

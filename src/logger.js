@@ -11,9 +11,8 @@ const configFunctions = require('../src/config');
 const config = configFunctions.getConfig();
 
 let producer;
-let initSuccess;
-const initKafkaLoggingProducer = (errorCallBack = console.error) => {
-  try {
+const initKafkaLoggingProducer = () => {
+  if (configFunctions.kafkaLogging) {
     producer = new KafkaProducer.Producer({
       connectionString: config.connectionString,
       ssl: {
@@ -21,17 +20,12 @@ const initKafkaLoggingProducer = (errorCallBack = console.error) => {
         key: config.sslKey,
       },
     });
-    return producer.init().then(() => {
-      initSuccess = true;
-    }).catch((err) => {
-      initSuccess = false;
-      errorCallBack(`Failed to initialized Kafka producer for logging error: ${err}`);
+    return producer.init().catch((err) => {
+      throw new Error(`Failed to initialized Kafka producer for logging, error: ${err}`);
     });
-  } catch (err) {
-    initSuccess = false;
-    errorCallBack(`Failed to initialized Kafka producer for logging error: ${err}`);
-    return Promise.resolve();
   }
+
+  return Promise.resolve();
 };
 
 const logFunc = {
@@ -69,14 +63,14 @@ const writeLog = (value, key = 'info', topic = config.topic,
     },
   };
   let promise;
-  if (configFunctions.kafkaLogging && initSuccess) {
+  if (configFunctions.kafkaLogging) {
     promise = producer.send(logMessage).catch(err => {
       producer.send(logMessage); // retry again if failed
       localLoggingCallBack(`Sending the log message to Kafka cluster failed, error: ${err}`);
     });
   }
 
-  if (configFunctions.localLogging || !initSuccess) {
+  if (configFunctions.localLogging) {
     localLoggingCallBack('Local logging is turned on');
     writeLocalLog(logMessage);
   }
