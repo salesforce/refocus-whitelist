@@ -48,8 +48,7 @@ const logger = {
   silly: (value) => writeLog(value, 'trace'),
 };
 
-const writeLog = (value, key = 'info', topic = config.topic,
-                  localLoggingCallBack = console.log) => {
+const writeLog = (value, key = 'info', topic = config.topic, callback = console.log) => {
   const messageValue = {
     sendTimeStamp: new Date(),
     value,
@@ -66,12 +65,12 @@ const writeLog = (value, key = 'info', topic = config.topic,
   if (configFunctions.kafkaLogging) {
     promise = producer.send(logMessage).catch(err => {
       producer.send(logMessage); // retry again if failed
-      localLoggingCallBack(`Sending the log message to Kafka cluster failed, error: ${err}`);
+      callback(`Sending the log message to Kafka cluster failed, error: ${err}`);
     });
   }
 
   if (configFunctions.localLogging) {
-    localLoggingCallBack('Local logging is turned on');
+    callback('Local logging is turned on');
     writeLocalLog(logMessage);
   }
 
