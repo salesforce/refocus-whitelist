@@ -68,6 +68,8 @@ const writeLog = (value, key = 'info', topic = config.topic,
       value: JSON.stringify(messageValue),
     },
   };
+  console.log('Value of initSucces:' + initSuccess);
+  console.log('Value of configFunctions.kafkaLogging:' + configFunctions.kafkaLogging);
   let promise;
   if (configFunctions.kafkaLogging && initSuccess) {
     promise = producer.send(logMessage).catch(err => {
