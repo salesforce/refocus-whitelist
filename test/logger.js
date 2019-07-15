@@ -76,15 +76,9 @@ describe('test/logger.js > ', () => {
       init: () => Promise.resolve(initMock()),
       send: (message) => Promise.resolve(sendMock(message)),
     });
-    initKafkaLoggingProducer().catch(() => {
-      sinon.assert.calledWith(producerMock, {
-        connectionString: 'test-url',
-        ssl: {
-          cert: 'test-cert',
-          key: 'test-key',
-        },
-      });
-      expect(initMock.calledOnce).to.be.true;
+    initKafkaLoggingProducer().then(() => {
+      expect(producerMock.calledOnce).to.be.false;
+      expect(initMock.calledOnce).to.be.false;
       writeLog('test-value', 'info', 'test-topic', localWriteCallback);
       expect(sendMock.calledOnce).to.be.false;
       expect(localWriteCallback.calledOnce).to.be.false;
