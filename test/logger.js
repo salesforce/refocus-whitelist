@@ -44,10 +44,10 @@ describe('test/logger.js > ', () => {
           key: 'test-key',
         },
       });
-      sinon.assert.calledOnce(initMock);
+      expect(initMock.calledOnce).to.be.true;
       writeLog('test-value', 'info', 'test-topic', localWriteCallback).then(() => {
-        sinon.assert.calledOnce(sendMock);
-        sinon.assert.calledOnce(localWriteCallback);
+        expect(sendMock.calledOnce).to.be.true;
+        expect(localWriteCallback.calledOnce).to.be.true;
       });
       KafkaProducer.Producer.restore();
     });
@@ -71,9 +71,35 @@ describe('test/logger.js > ', () => {
           key: 'test-key',
         },
       });
-      sinon.assert.calledOnce(initMock);
+      expect(initMock.calledOnce).to.be.true;
       writeLog('test-value', 'info', 'test-topic', localWriteCallback);
-      sinon.assert.calledOnce(sendMock);
+      expect(sendMock.calledOnce).to.be.true;
+      expect(localWriteCallback.calledOnce).to.be.false;
+    });
+    KafkaProducer.Producer.restore();
+  });
+
+  it('Kafka and local both off', () => {
+    config.kafkaLogging = false;
+    config.localLogging = false;
+    const localWriteCallback = sinon.spy();
+    const sendMock = sinon.stub().returns(Promise.resolve());
+    const initMock = sinon.stub().returns(Promise.resolve());
+    const producerMock = sinon.stub(KafkaProducer, 'Producer').returns({
+      init: () => Promise.resolve(initMock()),
+      send: (message) => Promise.resolve(sendMock(message)),
+    });
+    initKafkaLoggingProducer().then(() => {
+      sinon.assert.calledWith(producerMock, {
+        connectionString: 'test-url',
+        ssl: {
+          cert: 'test-cert',
+          key: 'test-key',
+        },
+      });
+      expect(initMock.calledOnce).to.be.true;
+      writeLog('test-value', 'info', 'test-topic', localWriteCallback);
+      expect(sendMock.calledOnce).to.be.false;
       expect(localWriteCallback.calledOnce).to.be.false;
     });
     KafkaProducer.Producer.restore();
@@ -90,9 +116,9 @@ describe('test/logger.js > ', () => {
       send: (message) => Promise.resolve(sendMock(message)),
     });
     initKafkaLoggingProducer().then(() => {
-      sinon.assert.calledOnce(initMock);
+      expect(initMock.calledOnce).to.be.true;
       writeLog('test-value', 'info', 'test-topic', localWriteCallback).then(() => {
-        sinon.assert.calledOnce(sendMock);
+        expect(sendMock.calledOnce).to.be.true;
         expect(localWriteCallback.calledOnce).to.be.true;
       });
     });
