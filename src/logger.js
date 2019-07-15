@@ -64,8 +64,8 @@ const writeLog = (value, key = 'info', topic = config.topic, callback = console.
   let promise;
   if (configFunctions.kafkaLogging) {
     promise = producer.send(logMessage).catch(err => {
+      callback(`Sending the log message to Kafka cluster failed, retrying, error: ${err}`);
       producer.send(logMessage); // retry again if failed
-      callback(`Sending the log message to Kafka cluster failed, error: ${err}`);
     });
   }
 
