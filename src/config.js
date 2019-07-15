@@ -7,7 +7,7 @@
  */
 
 const herokuConfig = {
-  topic: process.env.TOPIC ? process.env.TOPIC : 'refocus-whitelist',
+  topic: process.env.KAFKA_LOGGING_TOPIC ? process.env.KAFKA_LOGGING_TOPIC : 'refocus-whitelist',
   sslCert: process.env.KAFKA_CLIENT_CERT || '.ssl/client.crt',
   sslKey: process.env.KAFKA_CLIENT_CERT_KEY || '.ssl/client.key',
   connectionString: process.env.KAFKA_URL ? process.env.KAFKA_URL.replace(/\+ssl/g, '') : '',
