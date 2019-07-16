@@ -74,7 +74,8 @@ const logger = {
   warn: (value) => writeLog(value, 'warn'),
   info: (value) => writeLog(value, 'info'),
   debug: (value) => writeLog(value, 'debug'),
-  silly: (value) => writeLog(value, 'trace'),
+  verbose: (value) => writeLog(value, 'verbose'),
+  silly: (value) => writeLog(value, 'silly'),
 };
 
 module.exports = {
