@@ -40,14 +40,6 @@ const writeLocalLog = (logMessage) => {
   logFunc[logMessage.message.key](logMessage.message.value);
 };
 
-const logger = {
-  error: (value) => writeLog(value, 'error'),
-  warn: (value) => writeLog(value, 'warn'),
-  info: (value) => writeLog(value, 'info'),
-  debug: (value) => writeLog(value, 'debug'),
-  silly: (value) => writeLog(value, 'trace'),
-};
-
 const writeLog = (value, key = 'info', topic = kafkaConfig.topic, callback = console.log) => {
   const messageValue = {
     sendTimeStamp: new Date(),
@@ -75,6 +67,14 @@ const writeLog = (value, key = 'info', topic = kafkaConfig.topic, callback = con
   }
 
   return promise ? promise : Promise.resolve();
+};
+
+const logger = {
+  error: (value) => writeLog(value, 'error'),
+  warn: (value) => writeLog(value, 'warn'),
+  info: (value) => writeLog(value, 'info'),
+  debug: (value) => writeLog(value, 'debug'),
+  silly: (value) => writeLog(value, 'trace'),
 };
 
 module.exports = {
