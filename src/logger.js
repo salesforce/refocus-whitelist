@@ -7,17 +7,17 @@
  */
 
 const KafkaProducer = require('no-kafka');
-const configFunctions = require('../src/config');
-const config = configFunctions.getConfig();
+const configFunctions = require('../src/kafkaConfig');
+const kafkaConfig = configFunctions.getConfig();
 
 let producer;
 const initKafkaLoggingProducer = () => {
   if (configFunctions.kafkaLogging) {
     producer = new KafkaProducer.Producer({
-      connectionString: config.connectionString,
+      connectionString: kafkaConfig.connectionString,
       ssl: {
-        cert: config.sslCert,
-        key: config.sslKey,
+        cert: kafkaConfig.sslCert,
+        key: kafkaConfig.sslKey,
       },
     });
     return producer.init().catch((err) => {
@@ -48,7 +48,7 @@ const logger = {
   silly: (value) => writeLog(value, 'trace'),
 };
 
-const writeLog = (value, key = 'info', topic = config.topic, callback = console.log) => {
+const writeLog = (value, key = 'info', topic = kafkaConfig.topic, callback = console.log) => {
   const messageValue = {
     sendTimeStamp: new Date(),
     value,

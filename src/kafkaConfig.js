@@ -20,7 +20,7 @@ const testConfig = {
   connectionString: 'test-url',
 };
 
-const config = {
+const kafkaConfig = {
   test: testConfig,
   integration: herokuConfig,
   production: herokuConfig,
@@ -30,7 +30,7 @@ const config = {
 module.exports = {
   getConfig: (environmentName) => {
     if (!environmentName) environmentName = process.env.NODE_ENV;
-    return config[environmentName] ? config[environmentName] : config.test;
+    return kafkaConfig[environmentName] ? kafkaConfig[environmentName] : kafkaConfig.test;
   },
 
   kafkaLogging: process.env.KAFKA_LOGGING ? true : false,

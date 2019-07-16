@@ -9,13 +9,13 @@ const expect = require('chai').expect;
 const { initKafkaLoggingProducer, writeLog } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
-const config = require('../src/config');
+const kafkaConfig = require('../src/kafkaConfig');
 
 describe('test/logger.js > ', () => {
 
   it('Happy path:call producer with the right args, call the init function and send', () => {
-    config.kafkaLogging = true;
-    config.localLogging = true;
+    kafkaConfig.kafkaLogging = true;
+    kafkaConfig.localLogging = true;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -41,8 +41,8 @@ describe('test/logger.js > ', () => {
   });
 
   it('Happy path: local logging off', () => {
-    config.kafkaLogging = true;
-    config.localLogging = false;
+    kafkaConfig.kafkaLogging = true;
+    kafkaConfig.localLogging = false;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -67,8 +67,8 @@ describe('test/logger.js > ', () => {
   });
 
   it('Kafka and local both off', () => {
-    config.kafkaLogging = false;
-    config.localLogging = false;
+    kafkaConfig.kafkaLogging = false;
+    kafkaConfig.localLogging = false;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -87,8 +87,8 @@ describe('test/logger.js > ', () => {
   });
 
   it('Send throws an error', () => {
-    config.kafkaLogging = true;
-    config.localLogging = false;
+    kafkaConfig.kafkaLogging = true;
+    kafkaConfig.localLogging = false;
     const localWriteCallback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.reject());
     const initMock = sinon.stub().returns(Promise.resolve());
