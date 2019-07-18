@@ -69,17 +69,13 @@ const writeLog = (value, key = 'info', topic = kafkaConfig.topic, callback = con
   return promise ? promise : Promise.resolve();
 };
 
-const logger = {
+module.exports = {
+  initKafkaLoggingProducer,
+  writeLog,
   error: (value) => writeLog(value, 'error'),
   warn: (value) => writeLog(value, 'warn'),
   info: (value) => writeLog(value, 'info'),
   debug: (value) => writeLog(value, 'debug'),
   verbose: (value) => writeLog(value, 'verbose'),
   silly: (value) => writeLog(value, 'silly'),
-};
-
-module.exports = {
-  initKafkaLoggingProducer,
-  writeLog,
-  logger,
 };

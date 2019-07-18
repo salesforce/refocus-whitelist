@@ -8,7 +8,7 @@
 const whitelistUtils = require('./whitelistUtils');
 const expressUtils = require('./expressUtils');
 const port = process.env.PORT || 3000;
-const { logger, initKafkaLoggingProducer } = require('./logger');
+const logger = require('./logger');
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
@@ -32,4 +32,4 @@ const startApp = () => {
   app.listen(port, () => logger.info(listening));
 };
 
-initKafkaLoggingProducer().then(startApp);
+logger.initKafkaLoggingProducer().then(startApp);
