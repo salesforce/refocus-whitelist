@@ -36,9 +36,6 @@ const logFunc = {
   debug: console.log,
 };
 
-const writeLocalLog = (logMessage) => {
-  logFunc[logMessage.message.key](logMessage.message.value);
-};
 
 const writeLog = (value, key = 'info', topic = config.topic, callback = console.log) => {
   const messageValue = {
@@ -63,7 +60,7 @@ const writeLog = (value, key = 'info', topic = config.topic, callback = console.
 
   if (featureToggles.isFeatureEnabled('localLogging')) {
     callback('Local logging is turned on');
-    writeLocalLog(logMessage);
+    logFunc[logMessage.message.key](logMessage.message.value);
   }
 
   return promise ? promise : Promise.resolve();
