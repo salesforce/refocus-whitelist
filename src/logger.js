@@ -7,8 +7,8 @@
  */
 
 const KafkaProducer = require('no-kafka');
-const config = require('./kafkaLoggingConfig').getConfig();
 const featureToggles = require('feature-toggles');
+const config = require('./kafkaLoggingConfig').getConfig();
 
 let producer;
 const initKafkaLoggingProducer = () => {

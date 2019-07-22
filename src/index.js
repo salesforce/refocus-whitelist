@@ -12,6 +12,7 @@ const logger = require('./logger');
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
+require('./toggles');
 const startApp = () => {
   let whitelist;
   try {
