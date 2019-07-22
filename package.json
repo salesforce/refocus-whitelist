@@ -18,6 +18,7 @@
     "apicache": "^1.4.0",
     "debug": "^4.1.1",
     "express": "^4.16.4",
+    "feature-toggles": "^1.4.0",
     "ip-regex": "^4.0.0",
     "no-kafka": "^3.4.3"
   },

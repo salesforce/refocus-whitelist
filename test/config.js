@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/BSD-3-Clause
  */
 
-const { getConfig, testExport } = require('../src/kafkaConfig');
+const { getConfig, testExport } = require('../src/kafkaLoggingConfig');
 const { herokuConfig, testConfig } = testExport;
 const expect = require('chai').expect;
 

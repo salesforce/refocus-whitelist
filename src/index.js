@@ -32,4 +32,9 @@ const startApp = () => {
   app.listen(port, () => logger.info(listening));
 };
 
-logger.initKafkaLoggingProducer().then(startApp);
+try {
+  logger.initKafkaLoggingProducer().then(startApp);
+} catch (err) {
+  logger.error(err);
+  process.exit(1);
+}

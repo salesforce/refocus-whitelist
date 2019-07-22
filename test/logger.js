@@ -6,16 +6,20 @@
  * https://opensource.org/licenses/BSD-3-Clause
  */
 const expect = require('chai').expect;
-const { initKafkaLoggingProducer, writeLog } = require('../src/logger');
 const KafkaProducer = require('no-kafka');
 const sinon = require('sinon');
-const kafkaConfig = require('../src/kafkaConfig');
+const featureToggles = require('feature-toggles');
+const { initKafkaLoggingProducer, writeLog } = require('../src/logger');
+
+const toggleOverride = (key, value) => {
+  featureToggles._toggles[key] = value;
+};
 
 describe('test/logger.js > ', () => {
-
-  it('Happy path:call producer with the right args, call the init function and send', () => {
-    kafkaConfig.kafkaLogging = true;
-    kafkaConfig.localLogging = true;
+  it('Happy path:call producer with the right args,' +
+  'call the init function and send', () => {
+    toggleOverride('kafkaLogging', true);
+    toggleOverride('localLogging', true);
     const callback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -41,8 +45,8 @@ describe('test/logger.js > ', () => {
   });
 
   it('Happy path: local logging off', () => {
-    kafkaConfig.kafkaLogging = true;
-    kafkaConfig.localLogging = false;
+    toggleOverride('kafkaLogging', true);
+    toggleOverride('localLogging', false);
     const callback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -67,8 +71,8 @@ describe('test/logger.js > ', () => {
   });
 
   it('Kafka and local both off', () => {
-    kafkaConfig.kafkaLogging = false;
-    kafkaConfig.localLogging = false;
+    toggleOverride('kafkaLogging', false);
+    toggleOverride('localLogging', false);
     const callback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.resolve());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -87,8 +91,8 @@ describe('test/logger.js > ', () => {
   });
 
   it('Send throws an error', () => {
-    kafkaConfig.kafkaLogging = true;
-    kafkaConfig.localLogging = false;
+    toggleOverride('kafkaLogging', true);
+    toggleOverride('localLogging', false);
     const callback = sinon.spy();
     const sendMock = sinon.stub().returns(Promise.reject());
     const initMock = sinon.stub().returns(Promise.resolve());
@@ -98,7 +102,8 @@ describe('test/logger.js > ', () => {
     });
     initKafkaLoggingProducer().then(() => {
       expect(initMock.calledOnce).to.be.true;
-      writeLog('test-value', 'info', 'test-topic', callback).then(() => {
+      writeLog('test-value', 'info', 'test-topic',
+      callback).then(() => {
         expect(sendMock.calledTwice).to.be.true;
       });
     });

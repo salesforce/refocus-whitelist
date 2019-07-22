@@ -7,17 +7,17 @@
  */
 
 const KafkaProducer = require('no-kafka');
-const configFunctions = require('../src/kafkaConfig');
-const kafkaConfig = configFunctions.getConfig();
+const config = require('./kafkaLoggingConfig').getConfig();
+const featureToggles = require('feature-toggles');
 
 let producer;
 const initKafkaLoggingProducer = () => {
-  if (configFunctions.kafkaLogging) {
+  if (featureToggles.isFeatureEnabled('kafkaLogging')) {
     producer = new KafkaProducer.Producer({
-      connectionString: kafkaConfig.connectionString,
+      connectionString: config.connectionString,
       ssl: {
-        cert: kafkaConfig.sslCert,
-        key: kafkaConfig.sslKey,
+        cert: config.sslCert,
+        key: config.sslKey,
       },
     });
     return producer.init().catch((err) => {
@@ -40,7 +40,7 @@ const writeLocalLog = (logMessage) => {
   logFunc[logMessage.message.key](logMessage.message.value);
 };
 
-const writeLog = (value, key = 'info', topic = kafkaConfig.topic, callback = console.log) => {
+const writeLog = (value, key = 'info', topic = config.topic, callback = console.log) => {
   const messageValue = {
     sendTimeStamp: new Date(),
     value,
@@ -54,14 +54,14 @@ const writeLog = (value, key = 'info', topic = kafkaConfig.topic, callback = con
     },
   };
   let promise;
-  if (configFunctions.kafkaLogging) {
+  if (featureToggles.isFeatureEnabled('kafkaLogging')) {
     promise = producer.send(logMessage).catch(err => {
       callback(`Sending the log message to Kafka cluster failed, retrying, error: ${err}`);
       producer.send(logMessage); // retry again if failed
     });
   }
 
-  if (configFunctions.localLogging) {
+  if (featureToggles.isFeatureEnabled('localLogging')) {
     callback('Local logging is turned on');
     writeLocalLog(logMessage);
   }
