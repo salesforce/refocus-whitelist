@@ -11,7 +11,7 @@ const sinon = require('sinon');
 const logger = require('../src/logger');
 const expect = require('chai').expect;
 
-describe.only('test/unit/kafkaConfig.js getConfig', () => {
+describe('test/unit/kafkaConfig.js getConfig', () => {
   it('Exits when error is called', () => {
     sinon.stub(process, 'exit');
     sinon.stub(logger, 'initKafkaLoggingProducer').returns(Promise.reject());
