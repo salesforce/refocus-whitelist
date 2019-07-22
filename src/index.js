@@ -35,8 +35,8 @@ const startApp = () => {
 
 function startWithKafkaLogging() {
   return logger.initKafkaLoggingProducer().then(startApp).catch((err) => {
+    console.log('Reaching');
     logger.error(err);
-    process.exit(1);
   });
 }
 

@@ -36,17 +36,17 @@ const logFunc = {
   debug: console.log,
 };
 
-const writeLog = (value, key = 'info', topic = config.topic, callback = console.log) => {
-  const messageValue = {
+const writeLog = (message, key = 'info', topic = config.topic, callback = console.log) => {
+  const value = JSON.stringify({
     sendTimeStamp: new Date(),
-    value,
-  };
+    message,
+  });
   const logMessage = {
     topic,
     partition: 0,
     message: {
       key,
-      value: JSON.stringify(messageValue),
+      value,
     },
   };
   let promise;
@@ -59,7 +59,7 @@ const writeLog = (value, key = 'info', topic = config.topic, callback = console.
 
   if (featureToggles.isFeatureEnabled('localLogging')) {
     callback('Local logging is turned on');
-    logFunc[logMessage.message.key](logMessage.message.value);
+    logFunc[logMessage.message.key](message);
   }
 
   return promise ? promise : Promise.resolve();
@@ -68,10 +68,10 @@ const writeLog = (value, key = 'info', topic = config.topic, callback = console.
 module.exports = {
   initKafkaLoggingProducer,
   writeLog,
-  error: (value) => writeLog(value, 'error'),
-  warn: (value) => writeLog(value, 'warn'),
-  info: (value) => writeLog(value, 'info'),
-  debug: (value) => writeLog(value, 'debug'),
-  verbose: (value) => writeLog(value, 'verbose'),
-  silly: (value) => writeLog(value, 'silly'),
+  error: (message) => writeLog(message, 'error'),
+  warn: (message) => writeLog(message, 'warn'),
+  info: (message) => writeLog(message, 'info'),
+  debug: (message) => writeLog(message, 'debug'),
+  verbose: (message) => writeLog(message, 'verbose'),
+  silly: (message) => writeLog(message, 'silly'),
 };
