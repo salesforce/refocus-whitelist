@@ -36,7 +36,6 @@ const logFunc = {
   debug: console.log,
 };
 
-
 const writeLog = (value, key = 'info', topic = config.topic, callback = console.log) => {
   const messageValue = {
     sendTimeStamp: new Date(),
