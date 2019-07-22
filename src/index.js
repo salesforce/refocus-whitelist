@@ -13,7 +13,6 @@ require('./toggles');
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
 
-require('./toggles');
 const startApp = () => {
   let whitelist;
   try {
@@ -34,9 +33,15 @@ const startApp = () => {
   app.listen(port, () => logger.info(listening));
 };
 
-try {
-  logger.initKafkaLoggingProducer().then(startApp);
-} catch (err) {
-  logger.error(err);
-  process.exit(1);
+function startWithKafkaLogging() {
+  return logger.initKafkaLoggingProducer().then(startApp).catch((err) => {
+    logger.error(err);
+    process.exit(1);
+  });
 }
+
+startWithKafkaLogging();
+
+module.exports = {
+  startWithKafkaLogging,
+};
