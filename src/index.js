@@ -33,13 +33,13 @@ const startApp = () => {
   app.listen(port, () => logger.info(listening));
 };
 
-function startWithKafkaLogging() {
+function initApp() {
   return logger.initKafkaLoggingProducer().then(startApp).catch((err) => {
     logger.error(err);
   });
 }
 
-startWithKafkaLogging();
+initApp();
 
 module.exports = {
   startWithKafkaLogging,
