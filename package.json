@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "./node_modules/jscs/bin/jscs src test",
     "start": "node src/.",
-    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha --report none --print none --include-pid -- -R dot --recursive"
+    "test": "npm run lint && istanbul cover ./node_modules/mocha/bin/_mocha --report none --print none --include-pid -- -R dot --recursive --exit"
   },
   "repository": {
     "type": "git",

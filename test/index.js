@@ -12,11 +12,13 @@ const logger = require('../src/logger');
 const expect = require('chai').expect;
 
 describe('test/unit/kafkaConfig.js getConfig', () => {
-  it('Exits when error is called', () => {
-    sinon.stub(logger, 'initKafkaLoggingProducer').returns(Promise.reject(new Error('Error thrown')));
+  it('Exits when error is called', (done) => {
+    sinon.stub(logger, 'initKafkaLoggingProducer').
+    returns(Promise.reject(new Error('Error thrown')));
     sinon.spy(logger, 'error');
     startWithKafkaLogging().then(() => {
       sinon.assert.calledOnce(logger.error);
     });
+    done();
   });
 });
