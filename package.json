@@ -1,6 +1,6 @@
 {
   "name": "refocus-whitelist",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Utility application for Refocus's API, Real-Time and UI applications to verify that all inbound requests originate from whitelisted IP addresses.",
   "main": "src/index.js",
   "scripts": {
