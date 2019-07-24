@@ -38,7 +38,7 @@ const logFunc = {
 
 const writeLog = (message, key = 'info', topic = config.topic, callback = console.log) => {
   const value = JSON.stringify({
-    sendTimeStamp: new Date(),
+    messageTime: new Date(),
     message,
   });
   const logMessage = {
