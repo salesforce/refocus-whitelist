@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/BSD-3-Clause
  */
 
-const { startWithKafkaLogging } = require('../src/index');
+const { initApp } = require('../src/index');
 const sinon = require('sinon');
 const logger = require('../src/logger');
 const expect = require('chai').expect;
@@ -16,7 +16,7 @@ describe('test/unit/kafkaConfig.js getConfig', () => {
     sinon.stub(logger, 'initKafkaLoggingProducer').
     returns(Promise.reject(new Error('Error thrown')));
     sinon.spy(logger, 'error');
-    startWithKafkaLogging().then(() => {
+    initApp().then(() => {
       sinon.assert.calledOnce(logger.error);
     });
     done();

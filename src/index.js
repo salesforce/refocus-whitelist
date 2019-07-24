@@ -42,5 +42,5 @@ function initApp() {
 initApp();
 
 module.exports = {
-  startWithKafkaLogging,
+  initApp,
 };
