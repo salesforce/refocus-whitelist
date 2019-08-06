@@ -99,5 +99,9 @@ Note: the `refocus-whitelist-trace` options are very verbose.
 
 ## Version History
 
+<<<<<<< HEAD
 - 1.1.0 Add option for kafka logging
+=======
+- 1.1.0 - Add option for consolidated Refocus logging using Kafka
+>>>>>>> master
 - 1.0.0

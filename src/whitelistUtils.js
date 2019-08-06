@@ -33,7 +33,7 @@ const betweenInclusive = (n, min, max) => {
   const retval = n >= min && n <= max;
   trace('betweenInclusive(n=%d, min=%d, max=%d) ==> %s', n, min, max, retval);
   return retval;
-} // betweenInclusive
+}; // betweenInclusive
 
 /**
  * Returns numeric representation of the IP address.
