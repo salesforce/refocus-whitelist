@@ -51,6 +51,10 @@ reset the cache.
 In each of your Refocus applications, you must set environment variable
 `IP_WHITELIST_SERVICE` to the base URL of this application.
 
+### Logging
+
+If you are using [Refocus Logging](https://github.com/salesforce/refocus-logging) and the [Refocus Logging Client](https://www.npmjs.com/package/@salesforce/refocus-logging-client) please follow the extra configuration instructions provided therein.
+
 ## API
 
 ### `GET /v1/verify/:address`
