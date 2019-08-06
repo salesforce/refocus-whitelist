@@ -51,6 +51,12 @@ reset the cache.
 In each of your Refocus applications, you must set environment variable
 `IP_WHITELIST_SERVICE` to the base URL of this application.
 
+### Logging
+
+If you are using [Refocus Logging](https://github.com/salesforce/refocus-logging)
+and the [Refocus Logging Client](https://www.npmjs.com/package/@salesforce/refocus-logging-client) module, 
+please follow the configuration instructions provided therein.
+
 ## API
 
 ### `GET /v1/verify/:address`
@@ -93,4 +99,5 @@ Note: the `refocus-whitelist-trace` options are very verbose.
 
 ## Version History
 
+- 1.1.0 Add option for kafka logging
 - 1.0.0

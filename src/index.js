@@ -7,6 +7,7 @@
  */
 const whitelistUtils = require('./whitelistUtils');
 const expressUtils = require('./expressUtils');
+const logger = require('@salesforce/refocus-logging-client');
 const port = process.env.PORT || 3000;
 const listening = `Listening on port ${port}`;
 const API_CACHE_DURATION = process.env.API_CACHE_DURATION || false;
@@ -16,16 +17,16 @@ let whitelist;
 try {
   whitelist = whitelistUtils.loadWhitelist();
   if (!whitelist) { // allow everything
-    console.log('Warning: No IP_WHITELIST or empty IP_WHITELIST.');
-    console.log('Returning { allow: true } for all IP addresses until you ' +
+    logger.info('Warning: No IP_WHITELIST or empty IP_WHITELIST.');
+    logger.info('Returning { allow: true } for all IP addresses until you ' +
       'configure your IP_WHITELIST environment variable.');
   }
 } catch (err) {
-  console.error('Error:', err.message);
-  console.log('Returning { allow: false } for all IP addresses until you ' +
+  logger.error('Error:', err.message);
+  logger.info('Returning { allow: false } for all IP addresses until you ' +
     'fix your IP_WHITELIST environment variable.');
   whitelist = []; // allow nothing
 }
 
 const app = expressUtils.init(whitelist, API_CACHE_DURATION);
-app.listen(port, () => console.log(listening));
+app.listen(port, () => logger.info(listening));

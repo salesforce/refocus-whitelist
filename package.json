@@ -1,6 +1,6 @@
 {
   "name": "refocus-whitelist",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Utility application for Refocus's API, Real-Time and UI applications to verify that all inbound requests originate from whitelisted IP addresses.",
   "main": "src/index.js",
   "scripts": {
@@ -14,14 +14,15 @@
   "author": "Salesforce Refocus",
   "license": "ISC",
   "dependencies": {
+    "@salesforce/refocus-logging-client": "^1.0.4",
     "apicache": "^1.4.0",
     "debug": "^4.1.1",
-    "express": "^4.16.4",
-    "ip-regex": "^4.0.0"
+    "express": "^4.17.1",
+    "ip-regex": "^4.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "istanbul": "^0.4.5",
-    "mocha": "^6.1.3"
+    "mocha": "^6.2.0"
   }
 }
