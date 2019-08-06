@@ -97,5 +97,6 @@ Note: the `refocus-whitelist-trace` options are very verbose.
 
 ## Version History
 
+- 1.1.1 - Update refocus-logging-client version to 1.0.6
 - 1.1.0 - Add option for consolidated Refocus logging using Kafka
 - 1.0.0
