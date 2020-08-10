@@ -1,5 +1,7 @@
 # refocus-whitelist
 
+Note: this repository is infrequently maintained.
+
 Utility application for Refocus's API, Real-Time and UI applications to verify
 that all inbound requests originate from whitelisted IP addresses.
 
